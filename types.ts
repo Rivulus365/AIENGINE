@@ -18,8 +18,8 @@ export interface DerivedStats {
 }
 
 export interface ClassResources {
-    spellSlots: { current: number; max: number };
-    classFeats: { name: string; current: number; max: number };
+  spellSlots: { current: number; max: number };
+  classFeats: { name: string; current: number; max: number };
 }
 
 export type ItemRarity = 'common' | 'uncommon' | 'rare' | 'epic' | 'legendary';
@@ -52,14 +52,17 @@ export interface Enemy {
   ac: number;
   state?: string; // "Normal", "Prone", "Bloodied"
   description?: string;
-  traits?: string[]; 
+  traits?: string[];
   archetype?: string;
+  cr?: number;
+  xp?: number;
+  attacks?: { name: string; bonus: number; dmg: string }[];
 }
 
 export interface CombatLogEntry {
   turn: number;
   source: 'player' | 'enemy';
-  action: string; 
+  action: string;
   roll: number;
   isHit: boolean;
   damage?: number;
@@ -82,7 +85,7 @@ export interface Feat {
   name: string;
   description: string;
   type: 'passive' | 'active';
-  effect?: string; 
+  effect?: string;
 }
 
 export interface Spell {
@@ -90,7 +93,7 @@ export interface Spell {
   level: number;
   school: string;
   description: string;
-  cost?: string; 
+  cost?: string;
 }
 
 export interface Skill {
@@ -100,25 +103,27 @@ export interface Skill {
 }
 
 export interface PlayerState {
-    name: string;
-    class: string;
-    level: number;
-    xp: number;
-    nextLevelXp: number;
-    gold: number; // Added gold tracking
-    hp: {
-      current: number;
-      max: number;
-    };
-    stats: BaseStats; 
-    derivedStats: DerivedStats;
-    resources: ClassResources;
-    skills: Skill[]; 
-    proficiencies: string[]; 
-    activeFeats: string[]; 
-    activeSpells: string[]; 
-    unspentStatPoints: number;
-    features: string[]; 
+  name: string;
+  race: string;
+  class: string;
+  subclass?: string;
+  level: number;
+  xp: number;
+  nextLevelXp: number;
+  gold: number; // Added gold tracking
+  hp: {
+    current: number;
+    max: number;
+  };
+  stats: BaseStats;
+  derivedStats: DerivedStats;
+  resources: ClassResources;
+  skills: Skill[];
+  proficiencies: string[];
+  activeFeats: string[];
+  activeSpells: string[];
+  unspentStatPoints: number;
+  features: string[];
 }
 
 export interface GameState {
@@ -136,7 +141,7 @@ export interface ChatMessage {
   id: string;
   role: MessageRole;
   text: string;
-  image?: string; 
+  image?: string;
   gameStateSnapshot?: GameState;
   isLoading?: boolean;
 }
@@ -147,10 +152,46 @@ export enum ImageSize {
   Size_4K = '4K',
 }
 
+export interface SubclassDefinition {
+  name: string;
+  description: string;
+  features: string[];
+  statBonuses?: Partial<BaseStats>;
+}
+
 export interface ClassDefinition {
   name: string;
   description: string;
   statBonuses: Partial<BaseStats>;
+  resources: {
+    spellSlots: { current: number; max: number };
+    classFeats: { name: string; current: number; max: number };
+  };
   features: string[];
   hitDie: number;
+  subclasses?: Record<string, SubclassDefinition>;
+}
+
+export interface RaceDefinition {
+  name: string;
+  description: string;
+  statBonuses: Partial<BaseStats>;
+  traits: string[];
+  speed: number;
+}
+
+export interface BackgroundDefinition {
+  name: string;
+  description: string;
+  skillProficiencies: string[];
+  feature: {
+    name: string;
+    description: string;
+  };
+}
+
+export interface SkillDefinition {
+  name: string;
+  ability: keyof BaseStats;
+  description: string;
 }

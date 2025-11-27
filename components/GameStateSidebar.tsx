@@ -10,7 +10,7 @@ import DiceAnimation from './DiceAnimation';
 // --- SHARED HELPERS ---
 
 const getRarityColor = (rarity?: ItemRarity) => {
-    switch(rarity) {
+    switch (rarity) {
         case 'uncommon': return 'text-emerald-400 border-emerald-900/50 shadow-emerald-900/20';
         case 'rare': return 'text-blue-400 border-blue-900/50 shadow-blue-900/20';
         case 'epic': return 'text-purple-400 border-purple-900/50 shadow-purple-900/20';
@@ -21,7 +21,7 @@ const getRarityColor = (rarity?: ItemRarity) => {
 };
 
 const getRarityBorder = (rarity?: ItemRarity) => {
-    switch(rarity) {
+    switch (rarity) {
         case 'uncommon': return 'border-emerald-700/50';
         case 'rare': return 'border-blue-700/50';
         case 'epic': return 'border-purple-700/50';
@@ -51,7 +51,7 @@ const getEquippedSlot = (item: Item, equipment: Equipment): Item | null => {
     if (type.includes('armor') || type.includes('light') || type.includes('heavy') || type.includes('body')) return equipment.body;
     if (type.includes('accessory') || type.includes('ring') || type.includes('amulet')) return equipment.accessory;
     if (type.includes('melee') || type.includes('ranged') || type.includes('weapon') || hasDmg) return equipment.mainHand;
-    
+
     if (hasDmg && !type.includes('consumable')) return equipment.mainHand;
     if (hasAc && !type.includes('consumable')) return equipment.body;
 
@@ -87,7 +87,7 @@ const ItemTooltip: React.FC<{ item: Item; comparisonItem?: Item | null }> = ({ i
 
     let compareDmg = null;
     let compareAc = null;
-    
+
     if (comparisonItem && comparisonItem.name !== item.name) {
         const compDmg = comparisonItem.dmg || ITEM_LIBRARY[comparisonItem.name]?.dmg;
         if (dmg && compDmg) {
@@ -95,42 +95,42 @@ const ItemTooltip: React.FC<{ item: Item; comparisonItem?: Item | null }> = ({ i
             const compAvg = getDiceAverage(compDmg);
             compareDmg = { current: dmg, compare: compDmg, isBetter: currentAvg > compAvg, isSame: currentAvg === compAvg };
         }
-        
+
         const compAcVal = comparisonItem.ac ?? ITEM_LIBRARY[comparisonItem.name]?.ac;
         if (ac !== undefined && compAcVal !== undefined) {
-             compareAc = { current: ac, compare: compAcVal, isBetter: ac > compAcVal, isSame: ac === compAcVal };
+            compareAc = { current: ac, compare: compAcVal, isBetter: ac > compAcVal, isSame: ac === compAcVal };
         }
     }
 
     return (
-    <div className={`absolute right-full top-0 mr-3 w-64 bg-[#0c0a09] border p-3 rounded shadow-[0_0_20px_rgba(0,0,0,0.8)] z-50 hidden group-hover:block group-focus-within:block animate-in fade-in zoom-in-95 duration-200 pointer-events-none ${getRarityBorder(rarity)}`}>
-        <div className="flex justify-between items-start mb-1 border-b border-stone-800 pb-1">
-             <h4 className={`font-display font-bold text-sm ${getRarityColor(rarity).split(' ')[0]}`}>{item.name}</h4>
-             <span className="text-[9px] uppercase tracking-widest text-stone-600">{rarity}</span>
-        </div>
-        <div className="flex justify-between items-center mb-2">
-             <div className="text-[10px] text-stone-500 italic font-serif capitalize">{item.type || 'Item'}</div>
-             <div className="text-[10px] text-amber-200/80 font-mono">{val ? `${val}gp` : ''}</div>
-        </div>
-        {desc && <p className="text-xs text-stone-300 mb-3 leading-relaxed font-serif text-justify">{desc}</p>}
-        <div className="grid grid-cols-2 gap-y-1 gap-x-2 text-[10px] font-mono bg-[#151210] p-2 rounded border border-stone-900">
-            {item.weight !== undefined && <span className="text-stone-500">Weight: <span className="text-stone-300">{item.weight}lb</span></span>}
-            {item.qty && <span className="text-stone-500">Qty: <span className="text-stone-300">{item.qty}</span></span>}
-            {dmg && <span className="col-span-2 text-red-400 flex justify-between"><span>Damage:</span> <span className="text-red-300">{dmg}</span></span>}
-            {ac !== undefined && <span className="col-span-2 text-blue-400 flex justify-between"><span>Armor Class:</span> <span className="text-blue-300">+{ac}</span></span>}
-            {effect && <span className="col-span-2 text-emerald-400 border-t border-stone-800 pt-1 mt-1 italic">{effect}</span>}
-        </div>
-        {comparisonItem && comparisonItem.name !== item.name && (compareDmg || compareAc) && (
-            <div className="mt-2 pt-2 border-t border-stone-800 bg-stone-900/20 -mx-3 -mb-3 p-3 rounded-b">
-                <div className="text-[9px] uppercase text-stone-500 mb-1 flex items-center gap-1">
-                    <span>Vs Equipped:</span>
-                    <span className="text-amber-500/80 truncate max-w-[120px]">{comparisonItem.name}</span>
-                </div>
-                {compareDmg && <StatComparison label="Damage" current={compareDmg.current} compare={compareDmg.compare} isBetter={compareDmg.isBetter} isSame={compareDmg.isSame} />}
-                {compareAc && <StatComparison label="AC" current={compareAc.current} compare={compareAc.compare} isBetter={compareAc.isBetter} isSame={compareAc.isSame} />}
+        <div className={`absolute right-full top-0 mr-3 w-64 bg-[#0c0a09] border p-3 rounded shadow-[0_0_20px_rgba(0,0,0,0.8)] z-50 hidden group-hover:block group-focus-within:block animate-in fade-in zoom-in-95 duration-200 pointer-events-none ${getRarityBorder(rarity)}`}>
+            <div className="flex justify-between items-start mb-1 border-b border-stone-800 pb-1">
+                <h4 className={`font-display font-bold text-sm ${getRarityColor(rarity).split(' ')[0]}`}>{item.name}</h4>
+                <span className="text-[9px] uppercase tracking-widest text-stone-600">{rarity}</span>
             </div>
-        )}
-    </div>
+            <div className="flex justify-between items-center mb-2">
+                <div className="text-[10px] text-stone-500 italic font-serif capitalize">{item.type || 'Item'}</div>
+                <div className="text-[10px] text-amber-200/80 font-mono">{val ? `${val}gp` : ''}</div>
+            </div>
+            {desc && <p className="text-xs text-stone-300 mb-3 leading-relaxed font-serif text-justify">{desc}</p>}
+            <div className="grid grid-cols-2 gap-y-1 gap-x-2 text-[10px] font-mono bg-[#151210] p-2 rounded border border-stone-900">
+                {item.weight !== undefined && <span className="text-stone-500">Weight: <span className="text-stone-300">{item.weight}lb</span></span>}
+                {item.qty && <span className="text-stone-500">Qty: <span className="text-stone-300">{item.qty}</span></span>}
+                {dmg && <span className="col-span-2 text-red-400 flex justify-between"><span>Damage:</span> <span className="text-red-300">{dmg}</span></span>}
+                {ac !== undefined && <span className="col-span-2 text-blue-400 flex justify-between"><span>Armor Class:</span> <span className="text-blue-300">+{ac}</span></span>}
+                {effect && <span className="col-span-2 text-emerald-400 border-t border-stone-800 pt-1 mt-1 italic">{effect}</span>}
+            </div>
+            {comparisonItem && comparisonItem.name !== item.name && (compareDmg || compareAc) && (
+                <div className="mt-2 pt-2 border-t border-stone-800 bg-stone-900/20 -mx-3 -mb-3 p-3 rounded-b">
+                    <div className="text-[9px] uppercase text-stone-500 mb-1 flex items-center gap-1">
+                        <span>Vs Equipped:</span>
+                        <span className="text-amber-500/80 truncate max-w-[120px]">{comparisonItem.name}</span>
+                    </div>
+                    {compareDmg && <StatComparison label="Damage" current={compareDmg.current} compare={compareDmg.compare} isBetter={compareDmg.isBetter} isSame={compareDmg.isSame} />}
+                    {compareAc && <StatComparison label="AC" current={compareAc.current} compare={compareAc.compare} isBetter={compareAc.isBetter} isSame={compareAc.isSame} />}
+                </div>
+            )}
+        </div>
     );
 };
 
@@ -138,7 +138,7 @@ const CombatView: React.FC<{ gameState: GameState }> = ({ gameState }) => {
     const primaryEnemy = gameState.combat.enemies[0];
     const lastLog = gameState.combatLog?.[gameState.combatLog.length - 1];
     const isPlayerTurn = !lastLog || lastLog.source === 'enemy';
-    
+
     if (!primaryEnemy) return null;
 
     return (
@@ -159,8 +159,8 @@ const CombatView: React.FC<{ gameState: GameState }> = ({ gameState }) => {
                 <div className="absolute inset-0 bg-red-900/5 animate-pulse pointer-events-none"></div>
                 <div className="bg-red-950/80 p-2 border-b border-red-900/50 flex justify-between items-center relative z-10">
                     <div className="flex items-center gap-2">
-                            <Skull className="w-4 h-4 text-red-400" aria-hidden="true" />
-                            <span className="font-display font-bold text-red-100 tracking-wide">{primaryEnemy.name}</span>
+                        <Skull className="w-4 h-4 text-red-400" aria-hidden="true" />
+                        <span className="font-display font-bold text-red-100 tracking-wide">{primaryEnemy.name}</span>
                     </div>
                     <span className="text-[10px] uppercase tracking-widest text-red-400 font-sans border border-red-900/50 px-1 rounded">{primaryEnemy.archetype || 'Hostile'}</span>
                 </div>
@@ -187,34 +187,34 @@ const CombatView: React.FC<{ gameState: GameState }> = ({ gameState }) => {
 
             {/* Battle Log */}
             <div className="relative">
-                    <div className="flex items-center gap-2 text-xs font-display tracking-[0.2em] text-red-500 uppercase mb-3"><Activity className="w-3 h-3" /><span>Battle Log</span></div>
-                    <div className="space-y-2 max-h-[300px] overflow-y-auto custom-scrollbar pr-1 relative">
-                        {gameState.combatLog && gameState.combatLog.length > 0 ? (
-                            gameState.combatLog.slice().reverse().map((log, idx) => {
-                                const isPlayer = log.source === 'player';
-                                return (
-                                    <div key={idx} className={`text-xs p-2.5 rounded border ${isPlayer ? (log.isHit ? 'border-emerald-900/50 bg-emerald-950/20 ml-2' : 'border-stone-800 bg-stone-900/20 ml-2') : (log.isHit ? 'border-red-900/50 bg-red-950/20 mr-2' : 'border-stone-800 bg-stone-900/20 mr-2')} transition-all duration-300 hover:bg-opacity-50`}>
-                                        <div className={`flex justify-between mb-1.5 opacity-90 border-b pb-1 ${isPlayer ? 'border-emerald-900/20' : 'border-red-900/20'}`}>
-                                            <span className={`uppercase font-bold tracking-wider flex items-center gap-1.5 ${isPlayer ? 'text-emerald-400' : 'text-red-400'}`}>
-                                                {isPlayer ? <User className="w-3 h-3" /> : <Skull className="w-3 h-3" />}
-                                                {isPlayer ? 'You' : 'Enemy'}
-                                            </span>
-                                            <div className="flex items-center gap-2 font-mono text-[10px]">
-                                                <span className="text-stone-500">d20: {log.roll}</span>
-                                                {log.isHit ? <span className="text-stone-300 flex items-center gap-1"><Crosshair className="w-3 h-3" /> HIT</span> : <span className="text-stone-500 flex items-center gap-1"><Ban className="w-3 h-3" /> MISS</span>}
-                                            </div>
-                                        </div>
-                                        <div className="flex justify-between items-start gap-2">
-                                        <p className="text-stone-300 leading-snug font-serif italic">{log.description}</p>
-                                        {log.damage && log.damage > 0 && <div className={`font-mono font-bold text-sm whitespace-nowrap ${isPlayer ? 'text-emerald-500' : 'text-red-500'}`}>-{log.damage}</div>}
+                <div className="flex items-center gap-2 text-xs font-display tracking-[0.2em] text-red-500 uppercase mb-3"><Activity className="w-3 h-3" /><span>Battle Log</span></div>
+                <div className="space-y-2 max-h-[300px] overflow-y-auto custom-scrollbar pr-1 relative">
+                    {gameState.combatLog && gameState.combatLog.length > 0 ? (
+                        gameState.combatLog.slice().reverse().map((log, idx) => {
+                            const isPlayer = log.source === 'player';
+                            return (
+                                <div key={idx} className={`text-xs p-2.5 rounded border ${isPlayer ? (log.isHit ? 'border-emerald-900/50 bg-emerald-950/20 ml-2' : 'border-stone-800 bg-stone-900/20 ml-2') : (log.isHit ? 'border-red-900/50 bg-red-950/20 mr-2' : 'border-stone-800 bg-stone-900/20 mr-2')} transition-all duration-300 hover:bg-opacity-50`}>
+                                    <div className={`flex justify-between mb-1.5 opacity-90 border-b pb-1 ${isPlayer ? 'border-emerald-900/20' : 'border-red-900/20'}`}>
+                                        <span className={`uppercase font-bold tracking-wider flex items-center gap-1.5 ${isPlayer ? 'text-emerald-400' : 'text-red-400'}`}>
+                                            {isPlayer ? <User className="w-3 h-3" /> : <Skull className="w-3 h-3" />}
+                                            {isPlayer ? 'You' : 'Enemy'}
+                                        </span>
+                                        <div className="flex items-center gap-2 font-mono text-[10px]">
+                                            <span className="text-stone-500">d20: {log.roll}</span>
+                                            {log.isHit ? <span className="text-stone-300 flex items-center gap-1"><Crosshair className="w-3 h-3" /> HIT</span> : <span className="text-stone-500 flex items-center gap-1"><Ban className="w-3 h-3" /> MISS</span>}
                                         </div>
                                     </div>
-                                );
-                            })
-                        ) : (
-                            <div className="text-stone-600 italic text-xs text-center py-4 border border-dashed border-stone-800 rounded">The air grows heavy with anticipation...</div>
-                        )}
-                    </div>
+                                    <div className="flex justify-between items-start gap-2">
+                                        <p className="text-stone-300 leading-snug font-serif italic">{log.description}</p>
+                                        {log.damage && log.damage > 0 && <div className={`font-mono font-bold text-sm whitespace-nowrap ${isPlayer ? 'text-emerald-500' : 'text-red-500'}`}>-{log.damage}</div>}
+                                    </div>
+                                </div>
+                            );
+                        })
+                    ) : (
+                        <div className="text-stone-600 italic text-xs text-center py-4 border border-dashed border-stone-800 rounded">The air grows heavy with anticipation...</div>
+                    )}
+                </div>
             </div>
         </div>
     );
@@ -231,14 +231,15 @@ const SkillsView: React.FC<{ gameState: GameState }> = ({ gameState }) => (
                     {gameState.player.activeFeats.map((featName, idx) => {
                         const featDetails = FEAT_OPTIONS.find(f => f.name === featName);
                         return (
-                        <div key={idx} className="bg-[#151210] p-3 rounded border border-[#292524] hover:border-amber-900/30 transition-colors">
-                            <div className="flex justify-between items-start">
-                                <h4 className="text-amber-100 font-bold text-sm">{featName}</h4>
-                                <span className="text-[9px] uppercase tracking-widest text-stone-500 border border-stone-800 px-1 rounded">{featDetails?.type || 'Passive'}</span>
+                            <div key={idx} className="bg-[#151210] p-3 rounded border border-[#292524] hover:border-amber-900/30 transition-colors">
+                                <div className="flex justify-between items-start">
+                                    <h4 className="text-amber-100 font-bold text-sm">{featName}</h4>
+                                    <span className="text-[9px] uppercase tracking-widest text-stone-500 border border-stone-800 px-1 rounded">{featDetails?.type || 'Passive'}</span>
+                                </div>
+                                {featDetails && <p className="text-xs text-stone-400 mt-1 italic">{featDetails.description}</p>}
                             </div>
-                            {featDetails && <p className="text-xs text-stone-400 mt-1 italic">{featDetails.description}</p>}
-                        </div>
-                    )})}
+                        )
+                    })}
                 </div>
             ) : <div className="text-stone-600 italic text-xs text-center py-2">No active feats.</div>}
         </div>
@@ -274,15 +275,16 @@ const GrimoireView: React.FC<{ gameState: GameState }> = ({ gameState }) => (
             gameState.player.activeSpells.map((spellName, idx) => {
                 const spell = SPELL_LIBRARY[spellName] || { name: spellName, level: 0, school: 'Unknown', description: 'Mysterious magic.' };
                 return (
-                <div key={idx} className="bg-violet-950/10 border border-violet-900/20 p-3 rounded group hover:bg-violet-950/20 transition-colors">
-                    <div className="flex justify-between items-center mb-1">
-                        <span className="text-violet-200 font-display font-bold">{spell.name}</span>
-                        <span className="text-[10px] text-violet-400 border border-violet-900/30 px-1 rounded">Lvl {spell.level}</span>
+                    <div key={idx} className="bg-violet-950/10 border border-violet-900/20 p-3 rounded group hover:bg-violet-950/20 transition-colors">
+                        <div className="flex justify-between items-center mb-1">
+                            <span className="text-violet-200 font-display font-bold">{spell.name}</span>
+                            <span className="text-[10px] text-violet-400 border border-violet-900/30 px-1 rounded">Lvl {spell.level}</span>
+                        </div>
+                        <div className="text-[10px] text-stone-500 uppercase tracking-wider mb-2">{spell.school} • {spell.cost || 'Slot'}</div>
+                        <p className="text-xs text-stone-400 leading-relaxed italic">{spell.description}</p>
                     </div>
-                    <div className="text-[10px] text-stone-500 uppercase tracking-wider mb-2">{spell.school} • {spell.cost || 'Slot'}</div>
-                    <p className="text-xs text-stone-400 leading-relaxed italic">{spell.description}</p>
-                </div>
-            )})
+                )
+            })
         ) : <div className="text-stone-600 italic text-sm text-center py-10">The pages are blank...</div>}
     </div>
 );
@@ -290,24 +292,24 @@ const GrimoireView: React.FC<{ gameState: GameState }> = ({ gameState }) => (
 const MerchantView: React.FC<{ gameState: GameState, onAction: (t: string) => void }> = ({ gameState, onAction }) => (
     <div className="space-y-4 animate-in fade-in slide-in-from-right-2 duration-300">
         <div className="text-center p-4 border border-amber-900/20 bg-[#0c0a09] rounded-lg mb-4">
-                <div className="flex justify-center items-center gap-2 text-amber-500 mb-2">
-                    <ShoppingBag className="w-6 h-6" aria-hidden="true" />
-                    <Coins className="w-6 h-6 text-amber-400" aria-hidden="true" />
-                </div>
-                <h3 className="font-display text-lg text-amber-200/80">Local Merchant</h3>
-                <p className="text-[10px] text-stone-500 uppercase tracking-widest mb-2">Buying & Selling</p>
-                <div className="inline-block bg-[#1a0f0f] border border-amber-900/30 px-3 py-1 rounded-full text-xs font-mono text-amber-300">Wealth: {gameState.player.gold || 0} gp</div>
+            <div className="flex justify-center items-center gap-2 text-amber-500 mb-2">
+                <ShoppingBag className="w-6 h-6" aria-hidden="true" />
+                <Coins className="w-6 h-6 text-amber-400" aria-hidden="true" />
+            </div>
+            <h3 className="font-display text-lg text-amber-200/80">Local Merchant</h3>
+            <p className="text-[10px] text-stone-500 uppercase tracking-widest mb-2">Buying & Selling</p>
+            <div className="inline-block bg-[#1a0f0f] border border-amber-900/30 px-3 py-1 rounded-full text-xs font-mono text-amber-300">Wealth: {gameState.player.gold || 0} gp</div>
         </div>
 
         <div className="flex items-center gap-2 text-xs font-display tracking-[0.2em] text-stone-500 uppercase mb-3"><span>Your Goods</span><span className="w-full h-[1px] bg-[#292524]"></span></div>
 
         <ul className="text-sm space-y-1">
-                {gameState.inventory.length === 0 ? (
-                    <li className="text-stone-600 italic text-center py-4">Nothing to sell.</li>
-                ) : (
-                    gameState.inventory.map((item, idx) => {
-                        const itemValue = item.value || 1;
-                        return (
+            {gameState.inventory.length === 0 ? (
+                <li className="text-stone-600 italic text-center py-4">Nothing to sell.</li>
+            ) : (
+                gameState.inventory.map((item, idx) => {
+                    const itemValue = item.value || 1;
+                    return (
                         <li key={idx} className="flex items-center justify-between p-2 hover:bg-[#292524] rounded border border-transparent hover:border-amber-900/20 group focus-within:bg-[#292524]">
                             <div className="flex items-center gap-3">
                                 <div className="text-stone-300">{item.name}</div>
@@ -317,8 +319,9 @@ const MerchantView: React.FC<{ gameState: GameState, onAction: (t: string) => vo
                                 Sell <span className="text-amber-200">{itemValue}gp</span>
                             </button>
                         </li>
-                    )})
-                )}
+                    )
+                })
+            )}
         </ul>
     </div>
 );
@@ -347,19 +350,20 @@ const InventoryView: React.FC<{ gameState: GameState, onAction: (t: string) => v
                         const comparisonItem = getEquippedSlot(item, gameState.equipment);
 
                         return (
-                        <li key={idx} tabIndex={0} className="flex items-center gap-3 p-2 hover:bg-[#292524] rounded transition-colors group relative cursor-help focus:outline-none focus:bg-[#292524] focus-within:bg-[#292524]">
-                            <ItemTooltip item={item} comparisonItem={comparisonItem} />
-                            <Box className={`w-3 h-3 transition-colors ${textColor} opacity-60`} aria-hidden="true" />
-                            <div className="flex-1 flex justify-between">
-                                <span className={`${textColor} ${itemAnimation} group-hover:text-white`}>{item.name}</span>
-                                {item.qty && <span className="text-stone-500 font-mono text-xs">x{item.qty}</span>}
-                            </div>
-                            <div className="absolute right-2 flex gap-1 opacity-0 group-hover:opacity-100 group-focus-within:opacity-100 transition-opacity bg-[#151210] pl-2">
-                                <button onClick={(e) => { e.stopPropagation(); onAction(`[System]: Player equips ${item.name}.`); }} className="text-[9px] bg-stone-800 text-stone-300 px-1.5 py-0.5 rounded hover:bg-stone-700 border border-stone-600 focus:outline-none focus:border-amber-500" title="Equip">Eqp</button>
-                                <button onClick={(e) => { e.stopPropagation(); onAction(`[System]: Player drops ${item.name}.`); }} className="text-[9px] bg-red-950/40 text-red-400 px-1.5 py-0.5 rounded hover:bg-red-900/60 border border-red-900/50 focus:outline-none focus:border-red-500" title="Drop">Drop</button>
-                            </div>
-                        </li>
-                    )})
+                            <li key={idx} tabIndex={0} className="flex items-center gap-3 p-2 hover:bg-[#292524] rounded transition-colors group relative cursor-help focus:outline-none focus:bg-[#292524] focus-within:bg-[#292524]">
+                                <ItemTooltip item={item} comparisonItem={comparisonItem} />
+                                <Box className={`w-3 h-3 transition-colors ${textColor} opacity-60`} aria-hidden="true" />
+                                <div className="flex-1 flex justify-between">
+                                    <span className={`${textColor} ${itemAnimation} group-hover:text-white`}>{item.name}</span>
+                                    {item.qty && <span className="text-stone-500 font-mono text-xs">x{item.qty}</span>}
+                                </div>
+                                <div className="absolute right-2 flex gap-1 opacity-0 group-hover:opacity-100 group-focus-within:opacity-100 transition-opacity bg-[#151210] pl-2">
+                                    <button onClick={(e) => { e.stopPropagation(); onAction(`[System]: Player equips ${item.name}.`); }} className="text-[9px] bg-stone-800 text-stone-300 px-1.5 py-0.5 rounded hover:bg-stone-700 border border-stone-600 focus:outline-none focus:border-amber-500" title="Equip">Eqp</button>
+                                    <button onClick={(e) => { e.stopPropagation(); onAction(`[System]: Player drops ${item.name}.`); }} className="text-[9px] bg-red-950/40 text-red-400 px-1.5 py-0.5 rounded hover:bg-red-900/60 border border-red-900/50 focus:outline-none focus:border-red-500" title="Drop">Drop</button>
+                                </div>
+                            </li>
+                        )
+                    })
                 )}
             </ul>
         </div>
@@ -377,10 +381,10 @@ const StatsView: React.FC<{ gameState: GameState }> = ({ gameState }) => {
     ];
     return (
         <div className="space-y-6 animate-in fade-in slide-in-from-right-2 duration-300">
-             {/* Resources Grid */}
-             {(gameState.player.resources.spellSlots.max > 0 || gameState.player.resources.classFeats.max > 0) && (
-                 <div className="grid grid-cols-2 gap-2">
-                     {gameState.player.resources.spellSlots.max > 0 && (
+            {/* Resources Grid */}
+            {(gameState.player.resources.spellSlots.max > 0 || gameState.player.resources.classFeats.max > 0) && (
+                <div className="grid grid-cols-2 gap-2">
+                    {gameState.player.resources.spellSlots.max > 0 && (
                         <div className="bg-[#151015] border border-violet-900/30 p-2 rounded flex flex-col items-center">
                             <span className="text-[9px] text-violet-400 uppercase tracking-widest mb-1">Spell Slots</span>
                             <div className="flex gap-1">
@@ -389,8 +393,8 @@ const StatsView: React.FC<{ gameState: GameState }> = ({ gameState }) => {
                                 ))}
                             </div>
                         </div>
-                     )}
-                     {gameState.player.resources.classFeats.max > 0 && (
+                    )}
+                    {gameState.player.resources.classFeats.max > 0 && (
                         <div className="bg-[#151210] border border-amber-900/30 p-2 rounded flex flex-col items-center">
                             <span className="text-[9px] text-amber-500 uppercase tracking-widest mb-1 truncate max-w-full">{gameState.player.resources.classFeats.name}</span>
                             <div className="flex gap-1">
@@ -399,49 +403,54 @@ const StatsView: React.FC<{ gameState: GameState }> = ({ gameState }) => {
                                 ))}
                             </div>
                         </div>
-                     )}
-                 </div>
-             )}
+                    )}
+                </div>
+            )}
 
-             {/* Stats Grid */}
-             <div className="space-y-4">
+            {/* Stats Grid */}
+            <div className="space-y-4">
                 <div className="flex items-center gap-2 text-xs font-display tracking-[0.2em] text-stone-500 uppercase">
                     <span className="w-full h-[1px] bg-[#292524]"></span><span>Attributes</span><span className="w-full h-[1px] bg-[#292524]"></span>
                 </div>
                 <div className="grid grid-cols-2 gap-2">
                     {statDisplay.map((stat) => {
                         const mod = getModifier(stat.val);
+                        const modString = mod >= 0 ? `+${mod}` : `${mod}`;
+                        const modColor = mod > 0 ? 'text-emerald-400' : mod < 0 ? 'text-red-400' : 'text-stone-500';
+                        const modBg = mod > 0 ? 'bg-emerald-950/30 border-emerald-900/50' : mod < 0 ? 'bg-red-950/30 border-red-900/50' : 'bg-[#0c0a09] border-[#292524]';
+
                         return (
-                        <div key={stat.key} className={`bg-[#151210] p-2 rounded text-center border border-[#292524] group ${stat.borderHover} transition-colors relative`}>
-                            {gameState.player.unspentStatPoints > 0 && (
-                                <div className="absolute -top-1 -right-1 w-2 h-2 bg-amber-500 rounded-full animate-ping"></div>
-                            )}
-                            <div className="text-[9px] text-stone-500 uppercase tracking-wider mb-0.5">{stat.label}</div>
-                            <div className={`font-display font-bold text-xl text-stone-300 ${stat.hoverColor} transition-colors`}>{stat.val}</div>
-                            <div className="text-[10px] font-mono text-stone-500 bg-[#0c0a09] mx-auto w-8 rounded mt-0.5 border border-[#292524]">{mod >= 0 ? '+' : ''}{mod}</div>
-                        </div>
-                    )})}
+                            <div key={stat.key} className={`bg-[#151210] p-2 rounded text-center border border-[#292524] group ${stat.borderHover} transition-colors relative`}>
+                                {gameState.player.unspentStatPoints > 0 && (
+                                    <div className="absolute -top-1 -right-1 w-2 h-2 bg-amber-500 rounded-full animate-ping"></div>
+                                )}
+                                <div className="text-[9px] text-stone-500 uppercase tracking-wider mb-0.5">{stat.label}</div>
+                                <div className={`font-display font-bold text-xl text-stone-300 ${stat.hoverColor} transition-colors`}>{stat.val}</div>
+                                <div className={`text-[10px] font-mono mx-auto w-8 rounded mt-0.5 border ${modBg} ${modColor} transition-colors`}>{modString}</div>
+                            </div>
+                        )
+                    })}
                 </div>
-             </div>
-             
-             {/* Equipment Slots */}
-             <div className="space-y-2">
-                 <div className="flex items-center gap-2 text-xs font-display tracking-[0.2em] text-stone-500 uppercase"><span>Equipment</span><span className="w-full h-[1px] bg-[#292524]"></span></div>
-                 <div className="grid grid-cols-2 gap-2 text-xs">
-                     <div tabIndex={0} className={`bg-[#151210] p-2 rounded border border-[#292524] group relative focus:border-amber-500/50 outline-none ${gameState.equipment.mainHand?.rarity ? 'border-'+getRarityColor(gameState.equipment.mainHand.rarity).split(' ')[1] : ''}`}>
-                          {gameState.equipment.mainHand && <ItemTooltip item={gameState.equipment.mainHand} />}
-                          <div className="text-[9px] uppercase text-stone-500 mb-1">Main Hand</div>
-                          <div className={`text-amber-100/90 truncate ${gameState.equipment.mainHand?.rarity === 'legendary' ? 'text-shimmer font-bold' : ''} ${gameState.equipment.mainHand?.rarity === 'epic' ? 'text-purple-300' : ''}`}>{gameState.equipment.mainHand?.name || 'Empty'}</div>
-                          {gameState.equipment.mainHand && <div className="text-stone-500 text-[9px] mt-0.5">{gameState.equipment.mainHand.dmg}</div>}
-                     </div>
-                     <div tabIndex={0} className="bg-[#151210] p-2 rounded border border-[#292524] group relative focus:border-amber-500/50 outline-none">
-                          {gameState.equipment.body && <ItemTooltip item={gameState.equipment.body} />}
-                          <div className="text-[9px] uppercase text-stone-500 mb-1">Body</div>
-                          <div className={`text-amber-100/90 truncate ${gameState.equipment.body?.rarity === 'legendary' ? 'text-shimmer' : ''}`}>{gameState.equipment.body?.name || 'Empty'}</div>
-                          {gameState.equipment.body && <div className="text-stone-500 text-[9px] mt-0.5">AC {gameState.equipment.body.ac}</div>}
-                     </div>
-                 </div>
-             </div>
+            </div>
+
+            {/* Equipment Slots */}
+            <div className="space-y-2">
+                <div className="flex items-center gap-2 text-xs font-display tracking-[0.2em] text-stone-500 uppercase"><span>Equipment</span><span className="w-full h-[1px] bg-[#292524]"></span></div>
+                <div className="grid grid-cols-2 gap-2 text-xs">
+                    <div tabIndex={0} className={`bg-[#151210] p-2 rounded border border-[#292524] group relative focus:border-amber-500/50 outline-none ${gameState.equipment.mainHand?.rarity ? 'border-' + getRarityColor(gameState.equipment.mainHand.rarity).split(' ')[1] : ''}`}>
+                        {gameState.equipment.mainHand && <ItemTooltip item={gameState.equipment.mainHand} />}
+                        <div className="text-[9px] uppercase text-stone-500 mb-1">Main Hand</div>
+                        <div className={`text-amber-100/90 truncate ${gameState.equipment.mainHand?.rarity === 'legendary' ? 'text-shimmer font-bold' : ''} ${gameState.equipment.mainHand?.rarity === 'epic' ? 'text-purple-300' : ''}`}>{gameState.equipment.mainHand?.name || 'Empty'}</div>
+                        {gameState.equipment.mainHand && <div className="text-stone-500 text-[9px] mt-0.5">{gameState.equipment.mainHand.dmg}</div>}
+                    </div>
+                    <div tabIndex={0} className="bg-[#151210] p-2 rounded border border-[#292524] group relative focus:border-amber-500/50 outline-none">
+                        {gameState.equipment.body && <ItemTooltip item={gameState.equipment.body} />}
+                        <div className="text-[9px] uppercase text-stone-500 mb-1">Body</div>
+                        <div className={`text-amber-100/90 truncate ${gameState.equipment.body?.rarity === 'legendary' ? 'text-shimmer' : ''}`}>{gameState.equipment.body?.name || 'Empty'}</div>
+                        {gameState.equipment.body && <div className="text-stone-500 text-[9px] mt-0.5">AC {gameState.equipment.body.ac}</div>}
+                    </div>
+                </div>
+            </div>
         </div>
     );
 };
@@ -449,134 +458,134 @@ const StatsView: React.FC<{ gameState: GameState }> = ({ gameState }) => {
 // --- MAIN SIDEBAR COMPONENT ---
 
 interface GameStateSidebarProps {
-  gameState: GameState;
-  isLoading: boolean;
-  onAction: (text: string) => void;
-  soundEnabled: boolean;
+    gameState: GameState;
+    isLoading: boolean;
+    onAction: (text: string) => void;
+    soundEnabled: boolean;
 }
 
 const GameStateSidebar: React.FC<GameStateSidebarProps> = ({ gameState, isLoading, onAction, soundEnabled }) => {
-  const [activeTab, setActiveTab] = useState<'overview' | 'skills' | 'grimoire' | 'merchant'>('overview');
-  const [animatingRoll, setAnimatingRoll] = useState<{value: number, type: 'player' | 'enemy', isCrit: boolean, isFail: boolean} | null>(null);
-  const lastLogRef = useRef<string | null>(null);
+    const [activeTab, setActiveTab] = useState<'overview' | 'skills' | 'grimoire' | 'merchant'>('overview');
+    const [animatingRoll, setAnimatingRoll] = useState<{ value: number, type: 'player' | 'enemy', isCrit: boolean, isFail: boolean } | null>(null);
+    const lastLogRef = useRef<string | null>(null);
 
-  useEffect(() => {
-    const log = gameState.combatLog;
-    if (log && log.length > 0) {
-        const lastEntry = log[log.length - 1];
-        const entryString = JSON.stringify(lastEntry);
-        
-        if (entryString !== lastLogRef.current) {
-            lastLogRef.current = entryString;
-            if (typeof lastEntry.roll === 'number') {
-                setAnimatingRoll({
-                    value: lastEntry.roll,
-                    type: lastEntry.source,
-                    isCrit: lastEntry.roll === 20,
-                    isFail: lastEntry.roll === 1
-                });
+    useEffect(() => {
+        const log = gameState.combatLog;
+        if (log && log.length > 0) {
+            const lastEntry = log[log.length - 1];
+            const entryString = JSON.stringify(lastEntry);
+
+            if (entryString !== lastLogRef.current) {
+                lastLogRef.current = entryString;
+                if (typeof lastEntry.roll === 'number') {
+                    setAnimatingRoll({
+                        value: lastEntry.roll,
+                        type: lastEntry.source,
+                        isCrit: lastEntry.roll === 20,
+                        isFail: lastEntry.roll === 1
+                    });
+                }
             }
         }
-    }
-  }, [gameState.combatLog]);
+    }, [gameState.combatLog]);
 
-  const nextLevelXp = gameState.player.nextLevelXp || 300;
-  const xpPercentage = Math.min(100, (gameState.player.xp / nextLevelXp) * 100);
-  
-  const isMerchantAvailable = ['town', 'city', 'village', 'shop', 'camp', 'outpost'].some(loc => 
-      gameState.worldState.location.toLowerCase().includes(loc)
-  );
+    const nextLevelXp = gameState.player.nextLevelXp || 300;
+    const xpPercentage = Math.min(100, (gameState.player.xp / nextLevelXp) * 100);
 
-  return (
-    <div className={`h-full flex flex-col text-stone-300 font-serif overflow-hidden transition-colors duration-700 relative ${gameState.combat.isActive ? 'bg-[#1a0f0f]' : 'bg-[#1c1917]'}`}>
-      
-      {animatingRoll && (
-          <div className="absolute inset-0 z-50 flex items-center justify-center bg-black/40 backdrop-blur-[1px] pointer-events-none animate-in fade-in duration-300" role="status" aria-live="assertive">
-              <DiceAnimation target={animatingRoll.value} type={animatingRoll.type} isCrit={animatingRoll.isCrit} isFail={animatingRoll.isFail} onComplete={() => setAnimatingRoll(null)} soundEnabled={soundEnabled} />
-          </div>
-      )}
+    const isMerchantAvailable = ['town', 'city', 'village', 'shop', 'camp', 'outpost'].some(loc =>
+        gameState.worldState.location.toLowerCase().includes(loc)
+    );
 
-      {/* Character Header */}
-      <div className={`p-6 border-b shrink-0 transition-colors duration-700 ${gameState.combat.isActive ? 'bg-[#2a1212] border-red-900/30' : 'bg-[#151210] border-[#292524]'}`}>
-        <div className="flex items-center gap-3 mb-2">
-            <div className={`p-2 rounded-full border transition-colors duration-700 ${gameState.combat.isActive ? 'bg-red-950/40 border-red-500/30' : 'bg-[#292524] border-amber-900/30'} animate-float`}>
-                <User className={`w-6 h-6 transition-colors duration-700 ${gameState.combat.isActive ? 'text-red-500' : 'text-amber-600'}`} aria-hidden="true" />
-            </div>
-            <div className="flex-1">
-                <div className="flex justify-between items-start">
-                    <h2 className="text-xl font-display text-amber-100/90 tracking-wide leading-none">{gameState.player.name || "Unknown Hero"}</h2>
-                    <div className="flex items-center gap-1.5 bg-[#0c0a09]/50 px-2 py-0.5 rounded-full border border-amber-900/20" title={`Gold: ${gameState.player.gold || 0}`}>
-                        <Coins className="w-3 h-3 text-amber-500" aria-hidden="true" />
-                        <span className="font-mono text-xs text-amber-200">{gameState.player.gold || 0}</span>
+    return (
+        <div className={`h-full flex flex-col text-stone-300 font-serif overflow-hidden transition-colors duration-700 relative ${gameState.combat.isActive ? 'bg-[#1a0f0f]' : 'bg-[#1c1917]'}`}>
+
+            {animatingRoll && (
+                <div className="absolute inset-0 z-50 flex items-center justify-center bg-black/40 backdrop-blur-[1px] pointer-events-none animate-in fade-in duration-300" role="status" aria-live="assertive">
+                    <DiceAnimation target={animatingRoll.value} type={animatingRoll.type} isCrit={animatingRoll.isCrit} isFail={animatingRoll.isFail} onComplete={() => setAnimatingRoll(null)} soundEnabled={soundEnabled} />
+                </div>
+            )}
+
+            {/* Character Header */}
+            <div className={`p-6 border-b shrink-0 transition-colors duration-700 ${gameState.combat.isActive ? 'bg-[#2a1212] border-red-900/30' : 'bg-[#151210] border-[#292524]'}`}>
+                <div className="flex items-center gap-3 mb-2">
+                    <div className={`p-2 rounded-full border transition-colors duration-700 ${gameState.combat.isActive ? 'bg-red-950/40 border-red-500/30' : 'bg-[#292524] border-amber-900/30'} animate-float`}>
+                        <User className={`w-6 h-6 transition-colors duration-700 ${gameState.combat.isActive ? 'text-red-500' : 'text-amber-600'}`} aria-hidden="true" />
+                    </div>
+                    <div className="flex-1">
+                        <div className="flex justify-between items-start">
+                            <h2 className="text-xl font-display text-amber-100/90 tracking-wide leading-none">{gameState.player.name || "Unknown Hero"}</h2>
+                            <div className="flex items-center gap-1.5 bg-[#0c0a09]/50 px-2 py-0.5 rounded-full border border-amber-900/20" title={`Gold: ${gameState.player.gold || 0}`}>
+                                <Coins className="w-3 h-3 text-amber-500" aria-hidden="true" />
+                                <span className="font-mono text-xs text-amber-200">{gameState.player.gold || 0}</span>
+                            </div>
+                        </div>
+                        <div className="flex items-center justify-between text-xs text-stone-500 font-sans tracking-widest uppercase mt-1">
+                            <span className={gameState.combat.isActive ? 'text-red-400' : 'text-amber-700'}>{gameState.player.class}</span>
+                            <span className="text-stone-300">Level {gameState.player.level}</span>
+                        </div>
                     </div>
                 </div>
-                <div className="flex items-center justify-between text-xs text-stone-500 font-sans tracking-widest uppercase mt-1">
-                    <span className={gameState.combat.isActive ? 'text-red-400' : 'text-amber-700'}>{gameState.player.class}</span>
-                    <span className="text-stone-300">Level {gameState.player.level}</span>
-                </div>
-            </div>
-        </div>
-        
-        {/* XP Bar */}
-        <div className="mt-2 relative group" role="progressbar" aria-valuenow={gameState.player.xp} aria-valuemin={0} aria-valuemax={nextLevelXp}>
-            <div className="flex justify-between text-[10px] text-stone-600 mb-1 font-mono group-hover:text-amber-500 transition-colors" aria-hidden="true"><span>EXP</span><span>{gameState.player.xp} / {nextLevelXp}</span></div>
-            <div className="w-full bg-[#0c0a09] h-1 rounded-full overflow-hidden border border-white/5">
-                <div className="bg-amber-600 h-full transition-all duration-500 relative" style={{ width: `${xpPercentage}%` }}>
-                    <div className="absolute right-0 top-1/2 -translate-y-1/2 w-1.5 h-1.5 bg-amber-200 rounded-full blur-[1px] animate-torch"></div>
-                </div>
-            </div>
-        </div>
 
-        {/* Tabs */}
-        {!gameState.combat.isActive && (
-            <div className="flex mt-6 border-b border-[#292524] overflow-x-auto scrollbar-hide" role="tablist">
-                {['overview', 'skills', 'grimoire'].map(tab => (
-                    <button key={tab} role="tab" aria-selected={activeTab === tab} onClick={() => setActiveTab(tab as any)} className={`flex-1 pb-2 text-xs uppercase tracking-widest font-display transition-colors whitespace-nowrap px-2 ${activeTab === tab ? 'text-amber-500 border-b border-amber-500' : 'text-stone-600 hover:text-stone-400'}`}>{tab}</button>
-                ))}
-                {isMerchantAvailable && (
-                    <button role="tab" aria-selected={activeTab === 'merchant'} onClick={() => setActiveTab('merchant')} className={`flex-1 pb-2 text-xs uppercase tracking-widest font-display transition-colors whitespace-nowrap px-2 ${activeTab === 'merchant' ? 'text-emerald-500 border-b border-emerald-500' : 'text-stone-600 hover:text-emerald-700/60'}`}>Trade</button>
+                {/* XP Bar */}
+                <div className="mt-2 relative group" role="progressbar" aria-valuenow={gameState.player.xp} aria-valuemin={0} aria-valuemax={nextLevelXp}>
+                    <div className="flex justify-between text-[10px] text-stone-600 mb-1 font-mono group-hover:text-amber-500 transition-colors" aria-hidden="true"><span>EXP</span><span>{gameState.player.xp} / {nextLevelXp}</span></div>
+                    <div className="w-full bg-[#0c0a09] h-1 rounded-full overflow-hidden border border-white/5">
+                        <div className="bg-amber-600 h-full transition-all duration-500 relative" style={{ width: `${xpPercentage}%` }}>
+                            <div className="absolute right-0 top-1/2 -translate-y-1/2 w-1.5 h-1.5 bg-amber-200 rounded-full blur-[1px] animate-torch"></div>
+                        </div>
+                    </div>
+                </div>
+
+                {/* Tabs */}
+                {!gameState.combat.isActive && (
+                    <div className="flex mt-6 border-b border-[#292524] overflow-x-auto scrollbar-hide" role="tablist">
+                        {['overview', 'skills', 'grimoire'].map(tab => (
+                            <button key={tab} role="tab" aria-selected={activeTab === tab} onClick={() => setActiveTab(tab as any)} className={`flex-1 pb-2 text-xs uppercase tracking-widest font-display transition-colors whitespace-nowrap px-2 ${activeTab === tab ? 'text-amber-500 border-b border-amber-500' : 'text-stone-600 hover:text-stone-400'}`}>{tab}</button>
+                        ))}
+                        {isMerchantAvailable && (
+                            <button role="tab" aria-selected={activeTab === 'merchant'} onClick={() => setActiveTab('merchant')} className={`flex-1 pb-2 text-xs uppercase tracking-widest font-display transition-colors whitespace-nowrap px-2 ${activeTab === 'merchant' ? 'text-emerald-500 border-b border-emerald-500' : 'text-stone-600 hover:text-emerald-700/60'}`}>Trade</button>
+                        )}
+                    </div>
                 )}
             </div>
-        )}
-      </div>
 
-      {/* Main Content */}
-      <div className="p-6 space-y-8 flex-1 overflow-y-auto custom-scrollbar">
-        {/* Vitals */}
-        <div className="space-y-3 font-sans">
-            <div role="progressbar" aria-valuenow={gameState.player.hp.current} aria-valuemin={0} aria-valuemax={gameState.player.hp.max}>
-                <div className="flex items-center justify-between mb-1 text-xs"><div className="flex items-center gap-1.5 text-stone-400"><Heart className="w-3 h-3 text-red-800" /><span>Health</span></div><span className="font-mono text-stone-300">{gameState.player.hp.current} <span className="text-stone-600">/</span> {gameState.player.hp.max}</span></div>
-                <div className="w-full bg-[#0c0a09] h-2 rounded-full overflow-hidden border border-white/5 relative">
-                    <div className="absolute top-0 left-0 h-full bg-red-900/30 transition-all duration-1000 ease-out" style={{ width: `${Math.max(0, Math.min(100, (gameState.player.hp.current / gameState.player.hp.max) * 100))}%` }} />
-                    <div className="bg-gradient-to-r from-red-900 to-red-600 h-full transition-all duration-500 ease-out shadow-[0_0_10px_rgba(153,27,27,0.5)] relative" style={{ width: `${Math.max(0, Math.min(100, (gameState.player.hp.current / gameState.player.hp.max) * 100))}%` }}></div>
+            {/* Main Content */}
+            <div className="p-6 space-y-8 flex-1 overflow-y-auto custom-scrollbar">
+                {/* Vitals */}
+                <div className="space-y-3 font-sans">
+                    <div role="progressbar" aria-valuenow={gameState.player.hp.current} aria-valuemin={0} aria-valuemax={gameState.player.hp.max}>
+                        <div className="flex items-center justify-between mb-1 text-xs"><div className="flex items-center gap-1.5 text-stone-400"><Heart className="w-3 h-3 text-red-800" /><span>Health</span></div><span className="font-mono text-stone-300">{gameState.player.hp.current} <span className="text-stone-600">/</span> {gameState.player.hp.max}</span></div>
+                        <div className="w-full bg-[#0c0a09] h-2 rounded-full overflow-hidden border border-white/5 relative">
+                            <div className="absolute top-0 left-0 h-full bg-red-900/30 transition-all duration-1000 ease-out" style={{ width: `${Math.max(0, Math.min(100, (gameState.player.hp.current / gameState.player.hp.max) * 100))}%` }} />
+                            <div className="bg-gradient-to-r from-red-900 to-red-600 h-full transition-all duration-500 ease-out shadow-[0_0_10px_rgba(153,27,27,0.5)] relative" style={{ width: `${Math.max(0, Math.min(100, (gameState.player.hp.current / gameState.player.hp.max) * 100))}%` }}></div>
+                        </div>
+                    </div>
+                    <div className="grid grid-cols-2 gap-2">
+                        <div className="flex items-center justify-between bg-[#0c0a09]/50 p-2 rounded border border-[#292524]" title="Armor Class"><div className="flex items-center gap-2 text-xs text-stone-400"><Shield className="w-3 h-3 text-stone-500" /><span>AC</span></div><span className="font-mono text-stone-200">{gameState.player.derivedStats.ac}</span></div>
+                        <div className="flex items-center justify-between bg-[#0c0a09]/50 p-2 rounded border border-[#292524]" title="Attack Bonus"><div className="flex items-center gap-2 text-xs text-stone-400"><Sword className="w-3 h-3 text-stone-500" /><span>ATK</span></div><span className="font-mono text-stone-200">+{gameState.player.derivedStats.attackBonus}</span></div>
+                    </div>
                 </div>
-            </div>
-            <div className="grid grid-cols-2 gap-2">
-                <div className="flex items-center justify-between bg-[#0c0a09]/50 p-2 rounded border border-[#292524]" title="Armor Class"><div className="flex items-center gap-2 text-xs text-stone-400"><Shield className="w-3 h-3 text-stone-500" /><span>AC</span></div><span className="font-mono text-stone-200">{gameState.player.derivedStats.ac}</span></div>
-                <div className="flex items-center justify-between bg-[#0c0a09]/50 p-2 rounded border border-[#292524]" title="Attack Bonus"><div className="flex items-center gap-2 text-xs text-stone-400"><Sword className="w-3 h-3 text-stone-500" /><span>ATK</span></div><span className="font-mono text-stone-200">+{gameState.player.derivedStats.attackBonus}</span></div>
-            </div>
-        </div>
 
-        {gameState.combat.isActive && gameState.combat.enemies[0] ? (
-            <CombatView gameState={gameState} />
-        ) : (
-            <>
-                {activeTab === 'overview' && (
+                {gameState.combat.isActive && gameState.combat.enemies[0] ? (
+                    <CombatView gameState={gameState} />
+                ) : (
                     <>
-                        <StatsView gameState={gameState} />
-                        <InventoryView gameState={gameState} onAction={onAction} />
+                        {activeTab === 'overview' && (
+                            <>
+                                <StatsView gameState={gameState} />
+                                <InventoryView gameState={gameState} onAction={onAction} />
+                            </>
+                        )}
+                        {activeTab === 'skills' && <SkillsView gameState={gameState} />}
+                        {activeTab === 'grimoire' && <GrimoireView gameState={gameState} />}
+                        {activeTab === 'merchant' && <MerchantView gameState={gameState} onAction={onAction} />}
                     </>
                 )}
-                {activeTab === 'skills' && <SkillsView gameState={gameState} />}
-                {activeTab === 'grimoire' && <GrimoireView gameState={gameState} />}
-                {activeTab === 'merchant' && <MerchantView gameState={gameState} onAction={onAction} />}
-            </>
-        )}
-      </div>
+            </div>
 
-      <AdBanner />
-    </div>
-  );
+            <AdBanner />
+        </div>
+    );
 };
 
 export default GameStateSidebar;

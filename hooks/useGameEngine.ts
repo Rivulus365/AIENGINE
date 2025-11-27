@@ -2,7 +2,8 @@
 import { useState, useEffect, useRef } from 'react';
 import { User } from 'firebase/auth';
 import { GameState, ChatMessage, BaseStats, Feat, ImageSize } from '../types';
-import { INITIAL_GAME_STATE, CLASS_DEFINITIONS } from '../constants';
+import { INITIAL_GAME_STATE, GAME_CONFIG } from '../constants';
+import { GameDataService } from '../services/gameData';
 import { loadGame, saveGame, clearSave } from '../services/storage';
 import { validateGameState, repairGameState } from '../utils/validator';
 import { calculateDerivedStats, calculateMaxHp, generateInitialSkills } from '../utils/engine';
@@ -12,9 +13,9 @@ import { extractGameState } from '../utils/parser';
 // --- HELPER LOGIC ---
 const prepareHistoryForContext = async (
     currentHistory: ChatMessage[],
-    limit: number = 25
+    limit: number = GAME_CONFIG.HISTORY_LIMIT
 ): Promise<{ role: "user" | "model"; parts: { text: string }[] }[]> => {
-    
+
     let historyForApi: { role: "user" | "model"; parts: { text: string }[] }[] = currentHistory.map(m => ({
         role: (m.role === 'system' ? 'user' : m.role) as "user" | "model",
         parts: [{ text: m.text }]
@@ -23,11 +24,11 @@ const prepareHistoryForContext = async (
     if (historyForApi.length <= limit) return historyForApi;
 
     try {
-        const startKeep = 3;
-        const endKeep = 10;
+        const startKeep = GAME_CONFIG.SUMMARY_START_KEEP;
+        const endKeep = GAME_CONFIG.SUMMARY_END_KEEP;
         const chunkToSummarize = historyForApi.slice(startKeep, historyForApi.length - endKeep);
-        
-        if (chunkToSummarize.length > 5) {
+
+        if (chunkToSummarize.length > GAME_CONFIG.SUMMARY_THRESHOLD) {
             const summary = await summarizeHistory(chunkToSummarize);
             const summaryMessage: { role: "user" | "model"; parts: { text: string }[] } = {
                 role: 'user',
@@ -42,7 +43,7 @@ const prepareHistoryForContext = async (
     } catch (e) {
         console.warn("Summarization failed, falling back to full history", e);
     }
-    
+
     return historyForApi;
 };
 
@@ -94,8 +95,8 @@ export const useGameEngine = (user: User | null) => {
         if (saveTimeoutRef.current) clearTimeout(saveTimeoutRef.current);
 
         saveTimeoutRef.current = setTimeout(() => {
-             saveGame(user.uid, gameState, messages);
-        }, 2000); // Save 2 seconds after last state change
+            saveGame(user.uid, gameState, messages);
+        }, GAME_CONFIG.AUTO_SAVE_DELAY_MS); // Save after delay
 
         return () => {
             if (saveTimeoutRef.current) clearTimeout(saveTimeoutRef.current);
@@ -103,39 +104,38 @@ export const useGameEngine = (user: User | null) => {
     }, [gameState, messages, isCharacterCreated, isGameLoaded, user]);
 
     const addMessage = (role: 'user' | 'model' | 'system', text: string, image?: string): string => {
-        const id = Date.now().toString() + Math.random().toString();
+        const id = crypto.randomUUID();
         setMessages(prev => [...prev, { id, role, text, image }]);
         return id;
     };
 
     const updateMessageImage = (id: string, imageUrl: string) => {
-        setMessages(prev => prev.map(msg => 
+        setMessages(prev => prev.map(msg =>
             msg.id === id ? { ...msg, image: imageUrl } : msg
         ));
     };
 
-    const handleCharacterComplete = async (name: string, charClass: string, stats: BaseStats, feat: Feat) => {
+    const handleCharacterComplete = async (name: string, charClass: string, stats: BaseStats, feat: Feat, subclass?: string) => {
         const level = 1;
         const proficiencyBonus = 2;
         const derivedStats = calculateDerivedStats(stats, charClass, level, proficiencyBonus);
-        
-        const resources = {
+
+        // Fetch class definition dynamically
+        const classDefinitions = await GameDataService.getClasses();
+        const classDef = classDefinitions[charClass];
+
+        const resources = classDef?.resources || {
             spellSlots: { current: 0, max: 0 },
             classFeats: { name: "Feature", current: 0, max: 0 }
         };
 
-        if (['Mage', 'Cleric', 'Bard', 'Druid'].includes(charClass)) {
-            resources.spellSlots = { current: 2, max: 2 };
-            resources.classFeats = { name: "Arcane/Divine Ability", current: 1, max: 1 };
-        } else if (charClass === 'Warrior') {
-            resources.classFeats = { name: "Second Wind", current: 1, max: 1 };
-        } else if (charClass === 'Paladin') {
-            resources.classFeats = { name: "Lay on Hands", current: 5, max: 5 };
-        }
-
         const maxHp = calculateMaxHp(charClass, stats.con, level);
-        const initialProficiencies: string[] = ["Simple Weapons"]; 
+        const initialProficiencies: string[] = ["Simple Weapons"];
         const initialSkills = generateInitialSkills(stats, initialProficiencies, proficiencyBonus);
+
+        const baseFeatures = classDef?.features || [];
+        const subclassFeatures = (subclass && classDef?.subclasses?.[subclass]?.features) || [];
+        const allFeatures = [...baseFeatures, ...subclassFeatures];
 
         const newGameState: GameState = {
             ...INITIAL_GAME_STATE,
@@ -143,22 +143,24 @@ export const useGameEngine = (user: User | null) => {
                 ...INITIAL_GAME_STATE.player,
                 name,
                 class: charClass,
+                subclass: subclass || '',
                 level,
                 hp: { current: maxHp, max: maxHp },
                 stats: stats,
                 derivedStats: derivedStats,
                 resources,
                 skills: initialSkills,
-                proficiencies: initialProficiencies, 
+                proficiencies: initialProficiencies,
                 activeFeats: [feat.name],
                 activeSpells: [],
-                features: CLASS_DEFINITIONS[charClass]?.features || []
+                features: allFeatures
             }
         };
         setGameState(newGameState);
         setIsCharacterCreated(true);
 
-        const startPrompt = `I am ${name}, a Level 1 ${charClass}. My stats are STR:${stats.str} DEX:${stats.dex} CON:${stats.con} INT:${stats.int} WIS:${stats.wis} CHA:${stats.cha}. I have the feat ${feat.name}. Generate my starting inventory and drop me into the world.`;
+        const subclassText = subclass ? ` I specialize as a ${subclass}.` : '';
+        const startPrompt = `I am ${name}, a Level 1 ${charClass}.${subclassText} My stats are STR:${stats.str} DEX:${stats.dex} CON:${stats.con} INT:${stats.int} WIS:${stats.wis} CHA:${stats.cha}. I have the feat ${feat.name}. Generate my starting inventory and drop me into the world.`;
         addMessage('user', startPrompt);
         return { startPrompt, newGameState };
     };
@@ -204,7 +206,7 @@ export const useGameEngine = (user: User | null) => {
             const historyForApi = await prepareHistoryForContext(currentHistory);
             const rawResponse = await generateAdventureResponse(historyForApi, userInput, currentGameState);
             const { cleanedText, gameState: rawNewState } = extractGameState(rawResponse);
-            
+
             let newState = rawNewState;
             if (newState) {
                 if (!validateGameState(newState)) {
@@ -223,11 +225,11 @@ export const useGameEngine = (user: User | null) => {
                     .replace(/Rolled \d+/gi, '')
                     .replace(/\[.*?\]/g, '')
                     .trim();
-                
+
                 const visualDescription = cleanText.slice(0, 300);
                 const equipmentVisuals = newState?.equipment?.mainHand?.name ? `wielding ${newState.equipment.mainHand.name}` : '';
                 const characterVisuals = `${newState?.player.class}, ${equipmentVisuals}`;
-                
+
                 generateSceneImage(visualDescription, characterVisuals, options.imageSize).then(imageUrl => {
                     if (imageUrl) updateMessageImage(messageId, imageUrl);
                 });

@@ -1,110 +1,36 @@
+import { GameState, ImageSize, Skill } from './types';
+import { CLASS_DEFINITIONS } from './data/classes';
+import { ITEM_LIBRARY } from './data/items';
+import { SPELL_LIBRARY } from './data/spells';
+import { RACE_DEFINITIONS } from './data/races';
+import { FEAT_OPTIONS } from './data/feats';
+import { SKILL_LIST } from './data/skills';
+import { BACKGROUND_DEFINITIONS } from './data/backgrounds';
+import { BESTIARY } from './data/enemies';
 
-import { GameState, ImageSize, ClassDefinition, Feat, Item, Spell, Skill } from './types';
-
-export const CLASS_DEFINITIONS: Record<string, ClassDefinition> = {
-  Warrior: {
-    name: "Warrior",
-    description: "A master of martial combat.",
-    statBonuses: { str: 2, con: 1 },
-    features: ["Second Wind"],
-    hitDie: 10
-  },
-  Rogue: {
-    name: "Rogue",
-    description: "A scoundrel who uses stealth and trickery.",
-    statBonuses: { dex: 2, int: 1 },
-    features: ["Sneak Attack"],
-    hitDie: 8
-  },
-  Mage: {
-    name: "Mage",
-    description: "A scholarly magic-user.",
-    statBonuses: { int: 2, wis: 1 },
-    features: ["Spellcasting"],
-    hitDie: 6
-  },
-  Cleric: {
-    name: "Cleric",
-    description: "A priestly champion.",
-    statBonuses: { wis: 2, str: 1 },
-    features: ["Divine Domain", "Spellcasting"],
-    hitDie: 8
-  },
-  Ranger: {
-    name: "Ranger",
-    description: "A warrior of the wilderness.",
-    statBonuses: { dex: 2, wis: 1 },
-    features: ["Favored Enemy"],
-    hitDie: 10
-  },
-  Paladin: {
-    name: "Paladin",
-    description: "A holy warrior bound to a sacred oath.",
-    statBonuses: { str: 2, cha: 1 },
-    features: ["Divine Sense", "Lay on Hands"],
-    hitDie: 10
-  },
-  Bard: {
-    name: "Bard",
-    description: "An inspiring magician.",
-    statBonuses: { cha: 2, dex: 1 },
-    features: ["Bardic Inspiration"],
-    hitDie: 8
-  },
-  Druid: {
-    name: "Druid",
-    description: "A priest of the Old Faith.",
-    statBonuses: { wis: 2, con: 1 },
-    features: ["Wild Shape"],
-    hitDie: 8
-  }
-};
-
-export const SKILL_LIST = [
-  "Acrobatics", "Animal Handling", "Arcana", "Athletics", "Deception", 
-  "History", "Insight", "Intimidation", "Investigation", "Medicine", 
-  "Nature", "Perception", "Performance", "Persuasion", "Religion", 
-  "Sleight of Hand", "Stealth", "Survival"
-];
-
-// --- GAME DATABASE ---
-
-export const ITEM_LIBRARY: Record<string, Item> = {
-  "Iron Longsword": { name: "Iron Longsword", dmg: "1d8", type: "melee", weight: 3, value: 15, rarity: "common", description: "A versatile blade.", prop: "Versatile (1d10)" },
-  "Shortsword": { name: "Shortsword", dmg: "1d6", type: "melee", weight: 2, value: 10, rarity: "common", description: "Light and quick." },
-  "Leather Armor": { name: "Leather Armor", ac: 2, type: "light", weight: 10, value: 10, rarity: "common", description: "Stiffened leather pads." },
-  "Chain Mail": { name: "Chain Mail", ac: 6, type: "heavy", weight: 55, value: 75, rarity: "uncommon", description: "Interlocking metal rings." },
-  "Ring of Protection": { name: "Ring of Protection", ac: 1, type: "accessory", weight: 0, value: 500, rarity: "rare", description: "A magical ring that deflects blows.", effect: "+1 AC" },
-  "Potion of Healing": { name: "Potion of Healing", type: "consumable", weight: 0.5, value: 50, rarity: "common", description: "Restores 2d4+2 HP.", effect: "Heals 2d4+2" }
-};
-
-export const SPELL_LIBRARY: Record<string, Spell> = {
-  "Magic Missile": { name: "Magic Missile", level: 1, school: "Evocation", description: "Creates three glowing darts of magical force.", cost: "1 Slot" },
-  "Cure Wounds": { name: "Cure Wounds", level: 1, school: "Evocation", description: "Heals 1d8 + modifier.", cost: "1 Slot" },
-  "Fireball": { name: "Fireball", level: 3, school: "Evocation", description: "Explosion of flame (8d6 fire).", cost: "1 Slot" },
-  "Invisibility": { name: "Invisibility", level: 2, school: "Illusion", description: "Touch becomes invisible.", cost: "1 Slot" }
-};
-
-export const FEAT_OPTIONS: Feat[] = [
-  { name: "Great Weapon Master", description: "-5 penalty to hit for +10 damage.", type: "passive", effect: "-5 Hit / +10 Dmg" },
-  { name: "Sharpshooter", description: "Ignore cover, long range, -5/+10.", type: "passive", effect: "-5 Hit / +10 Dmg" },
-  { name: "War Caster", description: "Advantage on Con saves for spells.", type: "passive", effect: "Adv. Concentration" },
-  { name: "Alert", description: "+5 Initiative, no surprise.", type: "passive", effect: "+5 Init" },
-  { name: "Tough", description: "+2 HP per level.", type: "passive", effect: "+2 HP/Lvl" },
-  { name: "Lucky", description: "3 Luck points to reroll.", type: "active", effect: "3 Luck Points" }
-];
+// Re-export for backward compatibility
+export { CLASS_DEFINITIONS } from './data/classes';
+export { ITEM_LIBRARY } from './data/items';
+export { SPELL_LIBRARY } from './data/spells';
+export { RACE_DEFINITIONS } from './data/races';
+export { FEAT_OPTIONS } from './data/feats';
+export { SKILL_LIST } from './data/skills';
+export { BACKGROUND_DEFINITIONS } from './data/backgrounds';
+export { BESTIARY } from './data/enemies';
 
 // Helper to generate default skills
 const DEFAULT_SKILLS: Skill[] = SKILL_LIST.map(name => ({
-    name,
-    modifier: 0,
-    isProficient: false
+  name,
+  modifier: 0,
+  isProficient: false
 }));
 
 export const INITIAL_GAME_STATE: GameState = {
   player: {
     name: '',
+    race: 'Human', // Default race
     class: '',
+    subclass: '',
     level: 1,
     xp: 0,
     nextLevelXp: 300,
@@ -122,8 +48,8 @@ export const INITIAL_GAME_STATE: GameState = {
       spellSaveDc: 10
     },
     resources: {
-        spellSlots: { current: 0, max: 0 },
-        classFeats: { name: "Feature", current: 0, max: 0 }
+      spellSlots: { current: 0, max: 0 },
+      classFeats: { name: "Feature", current: 0, max: 0 }
     },
     skills: DEFAULT_SKILLS,
     proficiencies: [],
@@ -139,7 +65,7 @@ export const INITIAL_GAME_STATE: GameState = {
     accessory: null
   },
   inventory: [
-      { name: 'Rations', qty: 3, description: 'Dried meats.', weight: 3, value: 1.5, rarity: 'common' }
+    { name: 'Rations', qty: 3, description: 'Dried meats.', weight: 3, value: 1.5, rarity: 'common' }
   ],
   worldState: {
     location: 'Unknown',
@@ -215,6 +141,7 @@ At the end of EVERY response, you must print this JSON block. This is the only w
 {
   "player": {
     "name": "Hero",
+    "race": "Human",
     "class": "Warrior",
     "level": 1,
     "xp": 0,
@@ -226,11 +153,11 @@ At the end of EVERY response, you must print this JSON block. This is the only w
     },
     "derivedStats": {
       "proficiencyBonus": 2,
-      "ac": 14,          
+      "ac": 14,
       "initiative": 1,
-      "attackBonus": 5,  
+      "attackBonus": 5,
       "spellSaveDc": 10,
-      "damageDie": "1d8+3" 
+      "damageDie": "1d8+3"
     },
     "resources": {
         "spellSlots": { "current": 0, "max": 0 },
@@ -261,7 +188,7 @@ At the end of EVERY response, you must print this JSON block. This is the only w
   "combat": {
     "isActive": false,
     "distance": "Near",
-    "enemies": [] 
+    "enemies": []
     // Example: [{ "name": "Goblin", "hp": 7, "ac": 15, "state": "Normal" }]
   },
   "combatLog": []
@@ -276,3 +203,11 @@ Math Visibility: When dice are rolled, display the math inline. Example: "You sw
 Loot: When generating items, include description, value (gp), weight (lb), and rarity.
 Output: Narrative first, then the JSON block.
 `;
+
+export const GAME_CONFIG = {
+  AUTO_SAVE_DELAY_MS: 2000,
+  HISTORY_LIMIT: 25,
+  SUMMARY_START_KEEP: 3,
+  SUMMARY_END_KEEP: 10,
+  SUMMARY_THRESHOLD: 5
+};
